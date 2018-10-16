@@ -8,9 +8,6 @@ This includes:
 Note: The catalog is downloaded from their website - https://www.wga.hu/index1.html (go to database and then download)
 """
 
-# TODO: Get all duplicate titles (by author!!!!!) and pick the pic we want to go with
-# TODO: OR do we keep them as alternate views (or at least some of them)????
-
 import pandas as pd
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
@@ -115,7 +112,6 @@ def get_data():
             processed_sculptures.append({'Author': name, "title": sculpture['TITLE'], 'file': file_name, 'url': sculpture['URL']})
 
             # Dump over new json to file
-            # Can take a while so can start up easier
             with open("../../sculpture_data/wga/sculptures/wga_sculpture_data.json", "w+") as file:
                 json.dump({"data": processed_sculptures}, file)
 
@@ -148,28 +144,19 @@ def merge_sculpture_artist(sculpture_df):
     df['Period'] = df.apply(lambda row: "Medieval" if "MEDIEVAL" in row['Author'] else row['Period'], axis=1)
 
     #### Print Counts ####
-    print("\nNumber of Sculptures by Period")
+    print("\nNumber of Sculptures by Period:")
     print(df['Period'].value_counts())
 
-    df.to_csv('../../sculpture_data/wga/sculptures/wgu_sculpture_periods.csv', sep=',')
+    print("\nNumber of Sculptures by Period Without Detail Pics:")
+    df = df[~df['title'].str.contains("(detail)")]
+    print(df['Period'].value_counts())
 
-
-def get_dup_sculptures():
-    """
-    Get the duplicate sculptures
-    
-    :return: None
-    """
-    df = pd.read_csv('../../sculpture_data/wga/sculptures/wgu_sculpture_periods.csv', sep=',')
-    df2 = df[df.duplicated(subset=['Author', 'title'], keep=False)]
-
-    df2.to_csv("../../sculpture_data/wga/sculptures/duplicate_sculptures.csv", sep=',')
+    df.to_csv('../../sculpture_data/wga/sculptures/wga_sculpture_periods.csv', sep=',')
 
 
 def main():
     df = get_data()
     merge_sculpture_artist(df)
-    #get_dup_sculptures()
 
 
 if __name__ == "__main__":

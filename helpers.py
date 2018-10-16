@@ -25,10 +25,10 @@ def get_page(url, fake_user):
     except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout):
         # If anything goes wrong we log the url
         print("Error getting ", url)
-        with open("url_error_log.txt", "w+") as file:
+        with open("../url_error_log.txt", "w") as file:
             file.write(url)
 
-    # We'll give them 3 seconds for the standard page
+    # We'll give them 3 seconds
     time.sleep(3)
 
     return response
@@ -39,7 +39,7 @@ def if_image_exists(file, db):
     If the image file exists we skip scraping that page
 
     :param file: file name
-    :param db: wikiart or wga
+    :param db: wikiart, nga, or wga
 
     :return: Boolean - True if exists already
     """
@@ -52,12 +52,18 @@ def save_image(image_response, file_name, db):
 
     :param image_response: response from requests
     :param file_name: Name of file
-    :param db: wikiart or wga
+    :param db: wikiart, nga, or wga
 
     :return: None
     """
-    img = Image.open(BytesIO(image_response))
-    img.save(f"../../sculpture_data/{db}/sculpture_images/{file_name}")
+    # Idk....
+    if db != "nga":
+        img = Image.open(BytesIO(image_response))
+        img.save(f"../../sculpture_data/{db}/sculpture_images/{file_name}")
+    else:
+        file = open(f"../../sculpture_data/{db}/sculpture_images/{file_name}", 'wb')
+        file.write(image_response)
+        file.close()
 
 
 def scrape_image(file_name, url, fake_user, db):

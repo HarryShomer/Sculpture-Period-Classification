@@ -25,7 +25,6 @@ def parse_sculpture_page(sculpture_url, file_name, scraped_image_name, fake_user
     # Get Style of Sculpture
     style = soup.findAll("li", {"class": "dictionary-values"})[0].text
     style = style[style.find(":") + 1:].strip()
-    print(style)
 
     # Get the link to the original image
     image_links = soup.findAll("main", {"ng-controller": "ArtworkViewCtrl"})[0]['ng-init']
@@ -123,13 +122,27 @@ def get_data():
                                          'Period': style})
 
             # Dump over new json to file
-            # Can take a while so can start up easier
             with open("../../sculpture_data/wikiart/sculptures/wikiart_sculpture_data.json", "w+") as file:
                 json.dump({"data": processed_sculptures}, file)
 
         file_num += 1
 
-    return pd.DataFrame(processed_sculptures)
+    df = pd.DataFrame(processed_sculptures)
+
+    print("All:", df.shape)
+
+    # No Duplicates
+    df = df.drop_duplicates(subset=['Author', 'title'])
+    print("Drop Duplicates:", df.shape)
+
+    #### Print Counts ####
+    print("\nNumber of Sculptures by Period")
+    print(df['Period'].value_counts())
+    print(df['Period'].unique())
+
+    df.to_csv('../../sculpture_data/wikiart/sculptures/wikiart_sculpture_periods.csv', sep=',')
+
+    return df
 
 
 def main():
