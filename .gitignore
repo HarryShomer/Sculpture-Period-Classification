@@ -1,5 +1,8 @@
 .idea/
 notes.txt
+.ipynb_checkpoints/
+*.h5
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

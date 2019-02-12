@@ -72,7 +72,7 @@ def convert_artists():
     artists_df = artists_df.reset_index(drop=True)
 
     # Write to file -> wga_artists.csv
-    artists_df.to_csv("../../sculpture_data/wga/sculptures/wga_artists.csv", sep=',')
+    artists_df.to_csv("../../../sculpture_data/wga/sculptures/wga_artists.csv", sep=',')
 
 
 def main():

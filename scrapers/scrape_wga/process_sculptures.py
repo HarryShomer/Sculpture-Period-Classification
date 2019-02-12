@@ -76,7 +76,7 @@ def get_data():
     
     :return: CSV with data
     """
-    art_df = pd.read_csv("../../sculpture_data/wga/sculptures/catalog.csv", sep=None)
+    art_df = pd.read_csv("../../../sculpture_data/wga/sculptures/catalog.csv", sep=None)
 
     # Only read in relevant info
     # 1. Sculptures
@@ -93,7 +93,7 @@ def get_data():
     file_num = 0
 
     # Load data already processed
-    processed_sculptures = json.loads(open("../../sculpture_data/wga/sculptures/wga_sculpture_data.json", 'r').read())['data']
+    processed_sculptures = json.loads(open("../../../sculpture_data/wga/sculptures/wga_sculpture_data.json", 'r').read())['data']
 
     # Get files already processed - can easily look if scraped
     files_processed = [x['file'] for x in processed_sculptures]
@@ -112,7 +112,7 @@ def get_data():
             processed_sculptures.append({'Author': name, "title": sculpture['TITLE'], 'file': file_name, 'url': sculpture['URL']})
 
             # Dump over new json to file
-            with open("../../sculpture_data/wga/sculptures/wga_sculpture_data.json", "w+") as file:
+            with open("../../../sculpture_data/wga/sculptures/wga_sculpture_data.json", "w+") as file:
                 json.dump({"data": processed_sculptures}, file)
 
         file_num += 1
@@ -130,7 +130,7 @@ def merge_sculpture_artist(sculpture_df):
     
     :return: None
     """
-    artist_df = pd.read_csv("../../sculpture_data/wga/sculptures/wga_artists.csv", index_col=0)
+    artist_df = pd.read_csv("../../../sculpture_data/wga/sculptures/wga_artists.csv", index_col=0)
     artist_df = artist_df.rename(index=str, columns={"Artist": "Author"})
 
     # Deal with inconsistent names
@@ -151,7 +151,7 @@ def merge_sculpture_artist(sculpture_df):
     df = df[~df['title'].str.contains("(detail)")]
     print(df['Period'].value_counts())
 
-    df.to_csv('../../sculpture_data/wga/sculptures/wga_sculpture_periods.csv', sep=',')
+    df.to_csv('../../../sculpture_data/wga/sculptures/wga_sculpture_periods.csv', sep=',')
 
 
 def main():

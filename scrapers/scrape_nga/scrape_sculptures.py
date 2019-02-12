@@ -113,7 +113,7 @@ def get_data():
     file_num = 0
 
     # Load data already processed
-    processed_sculptures = json.loads(open("../../sculpture_data/nga/sculptures/nga_sculpture_data.json", 'r').read())['data']
+    processed_sculptures = json.loads(open("../../../sculpture_data/nga/sculptures/nga_sculpture_data.json", 'r').read())['data']
 
     # Get files already processed - can easily look if scraped
     files_processed = [x['file'] for x in processed_sculptures]
@@ -139,13 +139,13 @@ def get_data():
                                          'Period': sculpture['Period']})
 
             # Dump over new json to file
-            with open("../../sculpture_data/nga/sculptures/nga_sculpture_data.json", "w+") as file:
+            with open("../../../sculpture_data/nga/sculptures/nga_sculpture_data.json", "w+") as file:
                 json.dump({"data": processed_sculptures}, file)
 
         file_num += 1
 
     df = pd.DataFrame(processed_sculptures)
-    df.to_csv('../../sculpture_data/nga/sculptures/nga_sculpture_periods.csv', sep=',')
+    df.to_csv('../../../sculpture_data/nga/sculptures/nga_sculpture_periods.csv', sep=',')
 
     return df
 

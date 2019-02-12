@@ -6,6 +6,45 @@ import time
 import os
 from PIL import Image
 from io import BytesIO
+from keras.preprocessing.image import ImageDataGenerator
+
+# Model constant - For 12 Classes
+CLASSES = 12
+IMG_DIMENSIONS = (299, 299)
+TRAIN_IMAGES = 2387
+VALIDATION_IMAGES = 802
+TEST_IMAGES = 804
+
+
+def fit_train_image_generator():
+    """
+    Fit the training generator
+    
+    :return: ImageDataGenerator
+    """
+    # Train & Test Data Generators
+    train_datagen = ImageDataGenerator(
+        rescale=1. / 255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True
+    )
+
+    return train_datagen
+
+
+def fit_test_image_generator():
+    """
+    Fit the testing/validation generator
+    
+    :return: ImageDataGenerator
+    """
+    # We just rescale the test ones
+    test_datagen = ImageDataGenerator(
+        rescale=1. / 255
+    )
+
+    return test_datagen
 
 
 def get_page(url, fake_user):

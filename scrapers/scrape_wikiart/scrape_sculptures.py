@@ -41,9 +41,9 @@ def parse_sculpture_page(sculpture_url, file_name, scraped_image_name, fake_user
     scrape_image(file_name, original_image_link['Url'], fake_user, "wikiart")
 
     # Fix name for wikiart image...if not fixed yet (so needs to exist)
-    if os.path.isfile(os.path.join("../../sculpture_data/wikiart/wikiart_images/", scraped_image_name)):
-        os.rename(os.path.join("../../sculpture_data/wikiart/wikiart_images/", scraped_image_name),
-                  os.path.join("../../sculpture_data/wikiart/wikiart_images/", file_name))
+    if os.path.isfile(os.path.join("../../../sculpture_data/wikiart/wikiart_images/", scraped_image_name)):
+        os.rename(os.path.join("../../../sculpture_data/wikiart/wikiart_images/", scraped_image_name),
+                  os.path.join("../../../sculpture_data/wikiart/wikiart_images/", file_name))
 
     return style
 
@@ -62,7 +62,7 @@ def parse_sculpture_list():
     
     :return: Dict - with the lists of 4 pieces of info above
     """
-    file = open("../../sculpture_data/wikiart/WikiArt.html").read()
+    file = open("../../../sculpture_data/wikiart/WikiArt.html").read()
     soup = BeautifulSoup(file, "lxml")
 
     # Get name of artists
@@ -101,7 +101,7 @@ def get_data():
     file_num = 0
 
     # Load data already processed
-    processed_sculptures = json.loads(open("../../sculpture_data/wikiart/sculptures/wikiart_sculpture_data.json", 'r').read())['data']
+    processed_sculptures = json.loads(open("../../../sculpture_data/wikiart/sculptures/wikiart_sculpture_data.json", 'r').read())['data']
 
     # Get files already processed - can easily look if scraped
     files_processed = [x['file'] for x in processed_sculptures]
@@ -122,7 +122,7 @@ def get_data():
                                          'Period': style})
 
             # Dump over new json to file
-            with open("../../sculpture_data/wikiart/sculptures/wikiart_sculpture_data.json", "w+") as file:
+            with open("../../../sculpture_data/wikiart/sculptures/wikiart_sculpture_data.json", "w+") as file:
                 json.dump({"data": processed_sculptures}, file)
 
         file_num += 1
@@ -140,7 +140,7 @@ def get_data():
     print(df['Period'].value_counts())
     print(df['Period'].unique())
 
-    df.to_csv('../../sculpture_data/wikiart/sculptures/wikiart_sculpture_periods.csv', sep=',')
+    df.to_csv('../../../sculpture_data/wikiart/sculptures/wikiart_sculpture_periods.csv', sep=',')
 
     return df
 
