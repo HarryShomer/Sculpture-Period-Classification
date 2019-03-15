@@ -26,7 +26,6 @@ test_datagen = ImageDataGenerator(
 
 test_generator = test_datagen.flow_from_directory(
         directory='../../sculpture_data/model_data/classes_12/test',
-        #directory=r"C:\Users\Jack\Desktop\harry\sculpture_data\model_data\classes_12\test",
         target_size=img_dimensions,
         color_mode="rgb",
         batch_size=BATCH_SIZE,

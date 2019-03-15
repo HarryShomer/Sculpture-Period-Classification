@@ -48,8 +48,8 @@ def parse_page(style, page_num, fake_user):
     
     :return: list of <li> tags
     """
-    url = f"{style}".join(["https://www.nga.gov/collection-search-result.html?artobj_imagesonly=Images_online&artobj_classification=sculpture&artobj_style=",
-                           f"&pageNumber={page_num+1}&lastFacet=artobj_style"])
+    url = f"{style}".join(["https://www.nga.gov/collection-search-result.html?artobj_imagesonly=Images_online&artobj_"
+                           "classification=sculpture&artobj_style=", f"&pageNumber={page_num+1}&lastFacet=artobj_style"])
 
     # Custom User-Agent
     opts.add_argument(fake_user.random)

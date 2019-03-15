@@ -140,7 +140,6 @@ plt.xlabel('Predicted Style')
 fig.tight_layout()
 plt.show()
 
-"""
 # Normalize #'s
 normalized_matrix = [col/sum(row) for row in cnf_matrix for col in row]
 normalized_matrix = np.reshape(normalized_matrix, (12, 12))
@@ -154,4 +153,4 @@ plt.ylabel('True Style')
 plt.xlabel('Predicted Style')
 fig.tight_layout()
 plt.show()
-"""
+

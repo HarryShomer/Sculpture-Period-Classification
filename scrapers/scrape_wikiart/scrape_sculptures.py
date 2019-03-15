@@ -6,16 +6,16 @@ from bs4 import BeautifulSoup
 import json
 import pandas as pd
 from fake_useragent import UserAgent
+import os
 from helpers import *
 
 
-def parse_sculpture_page(sculpture_url, file_name, scraped_image_name, fake_user):
+def parse_sculpture_page(sculpture_url, file_name, fake_user):
     """
     Parse the page for the sculpture
     
     :param sculpture_url: Url for the sculpture
     :param file_name: Given file_name for the new image
-    :param scraped_image_name: Name of the file for the Small wikiart image we already have
     :param fake_user: Fake User object
     
     :return: style - String
@@ -40,11 +40,6 @@ def parse_sculpture_page(sculpture_url, file_name, scraped_image_name, fake_user
     # Only scrape if not saved already
     scrape_image(file_name, original_image_link['Url'], fake_user, "wikiart")
 
-    # Fix name for wikiart image...if not fixed yet (so needs to exist)
-    if os.path.isfile(os.path.join("../../../sculpture_data/wikiart/wikiart_images/", scraped_image_name)):
-        os.rename(os.path.join("../../../sculpture_data/wikiart/wikiart_images/", scraped_image_name),
-                  os.path.join("../../../sculpture_data/wikiart/wikiart_images/", file_name))
-
     return style
 
 
@@ -60,10 +55,18 @@ def parse_sculpture_list():
     Here's the link - https://www.wikiart.org/en/paintings-by-genre/sculpture?select=featured#!#filterName:featured,viewType:masonry
     You need to load all the images b4 downloading
     
+    Update -> the above file is now included in this directory. For more up to date info ge the page yourself
+    
     :return: Dict - with the lists of 4 pieces of info above
     """
-    file = open("../../../sculpture_data/wikiart/WikiArt.html").read()
-    soup = BeautifulSoup(file, "lxml")
+    try:
+        with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "WikiArt.html")) as file:
+            sculpt_file = file.read()
+    except FileNotFoundError:
+        raise Exception("The Wikiart.html file needs to be placed in this directory",
+                        os.path.dirname(os.path.realpath(__file__)))
+
+    soup = BeautifulSoup(sculpt_file, "lxml")
 
     # Get name of artists
     artists = soup.findAll("a", {"target": "_self", "class": "artist-name ng-binding"})
@@ -114,7 +117,7 @@ def get_data():
             print(file_name)
 
             # Parse and append
-            style = parse_sculpture_page(sculptures_raw['links'][index], file_name, sculptures_raw['images'][index], fake_user)
+            style = parse_sculpture_page(sculptures_raw['links'][index], file_name, fake_user)
             processed_sculptures.append({'Author': sculptures_raw['artists'][index],
                                          "title": sculptures_raw['titles'][index],
                                          'file': file_name,
@@ -127,26 +130,12 @@ def get_data():
 
         file_num += 1
 
-    df = pd.DataFrame(processed_sculptures)
-
-    print("All:", df.shape)
-
-    # No Duplicates
-    df = df.drop_duplicates(subset=['Author', 'title'])
-    print("Drop Duplicates:", df.shape)
-
-    #### Print Counts ####
-    print("\nNumber of Sculptures by Period")
-    print(df['Period'].value_counts())
-    print(df['Period'].unique())
-
+    df = pd.DataFrame(processed_sculptures).drop_duplicates(subset=['Author', 'title'])
     df.to_csv('../../../sculpture_data/wikiart/sculptures/wikiart_sculpture_periods.csv', sep=',')
-
-    return df
 
 
 def main():
-    df = get_data()
+    get_data()
 
 if __name__ == "__main__":
     main()

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from keras.applications import Xception
 from keras import regularizers
+import os
 import helpers
 
 BATCH_SIZE = 16
@@ -14,8 +15,7 @@ train_datagen = helpers.fit_train_image_generator()
 test_datagen = helpers.fit_test_image_generator()
 
 train_generator = train_datagen.flow_from_directory(
-        #directory='../../sculpture_data/model_data/classes_12/train',
-        directory=r"C:\Users\Jack\Desktop\harry\sculpture_data\model_data\classes_12\train",
+        directory='../../sculpture_data/model_data/classes_12/train',
         target_size=helpers.IMG_DIMENSIONS,
         batch_size=BATCH_SIZE,
         color_mode="rgb",
@@ -24,8 +24,7 @@ train_generator = train_datagen.flow_from_directory(
         class_mode="categorical")
 
 validation_generator = test_datagen.flow_from_directory(
-        #directory='../../sculpture_data/model_data/classes_12/validation',
-        directory=r"C:\Users\Jack\Desktop\harry\sculpture_data\model_data\classes_12\validation",
+        directory='../../sculpture_data/model_data/classes_12/validation',
         target_size=helpers.IMG_DIMENSIONS,
         batch_size=BATCH_SIZE,
         color_mode="rgb",
@@ -60,7 +59,7 @@ cnn_model = model.fit_generator(
                 validation_steps=helpers.VALIDATION_IMAGES // BATCH_SIZE,
                 )
 
-file_name = r"C:\Users\Jack\Desktop\harry\sculpture_classification\xception_bottleneck_12_reg_0075"
+file_name = "xception_bottleneck_12_reg_0075"
 print("Saving CNN as '{}'...".format(file_name + "h5"))
 model.save(file_name + ".h5")
 

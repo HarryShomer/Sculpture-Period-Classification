@@ -5,7 +5,8 @@ This includes:
 2. Scraping the info off of the website and storing it
 3. Merging with 'wga_authors.csv' to get the art period
 
-Note: The catalog is downloaded from their website - https://www.wga.hu/index1.html (go to database and then download)
+Note: The catalog is downloaded from their website - https://www.wga.hu/index1.html (go to database and then download).
+      This needs to be downloaded b4 you can start and placed in the approproiate location (see line 80). 
 """
 
 import pandas as pd
@@ -76,7 +77,12 @@ def get_data():
     
     :return: CSV with data
     """
-    art_df = pd.read_csv("../../../sculpture_data/wga/sculptures/catalog.csv", sep=None)
+    try:
+        art_df = pd.read_csv(os.path.join(os.path.dirname(os.path.realpath(__file__)), "catalog.csv"), sep=None)
+    except FileNotFoundError:
+        raise Exception("WGA Csv not found! You need to download the WGA catalog befoe you start. It can be found here "
+                        "- https://www.wga.hu/index1.html under database and download. The CSV needs to be placed in "
+                        "the following directory '/sculpture_data/wga/sculptures/' created for you. ")
 
     # Only read in relevant info
     # 1. Sculptures
@@ -117,7 +123,7 @@ def get_data():
 
         file_num += 1
 
-    return pd.DataFrame(processed_sculptures)
+    return merge_sculpture_artist(pd.DataFrame(processed_sculptures))
 
 
 def merge_sculpture_artist(sculpture_df):
@@ -143,20 +149,13 @@ def merge_sculpture_artist(sculpture_df):
     # Can fill in Period for these though we don't know the name
     df['Period'] = df.apply(lambda row: "Medieval" if "MEDIEVAL" in row['Author'] else row['Period'], axis=1)
 
-    #### Print Counts ####
-    print("\nNumber of Sculptures by Period:")
-    print(df['Period'].value_counts())
-
-    print("\nNumber of Sculptures by Period Without Detail Pics:")
     df = df[~df['title'].str.contains("(detail)")]
-    print(df['Period'].value_counts())
 
     df.to_csv('../../../sculpture_data/wga/sculptures/wga_sculpture_periods.csv', sep=',')
 
 
 def main():
-    df = get_data()
-    merge_sculpture_artist(df)
+    get_data()
 
 
 if __name__ == "__main__":
