@@ -6,7 +6,7 @@ from keras.applications import Xception
 from keras.preprocessing.image import ImageDataGenerator
 from keras import regularizers
 
-BATCH_SIZE = 16
+BATCH_SIZE = 1
 img_dimensions = (299, 299)
 NUM_EPOCHS = 50
 CLASSES = 12
@@ -44,6 +44,10 @@ validation_generator = test_datagen.flow_from_directory(
         color_mode="rgb",
         seed=42,
         class_mode="categorical")
+
+print(len(train_generator))
+exit()
+
 
 # Create and load weights
 base_model = Xception(include_top=False, weights=None)
